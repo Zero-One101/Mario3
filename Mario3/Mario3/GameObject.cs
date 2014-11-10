@@ -28,7 +28,7 @@ namespace Mario3
             get { return hitRect; }
         }
 
-        public abstract void Initialise(Viewport viewport, Texture2D spritesheet);
+        public abstract void Initialise(Viewport viewport, EntityManager entityManager);
         public abstract void Update(GameTime gameTime);
         public abstract void Draw(SpriteBatch spriteBatch);
         public abstract void Collide(GameObject gameObject);

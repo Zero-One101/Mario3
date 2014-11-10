@@ -4,3 +4,11 @@ F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Mario3.csprojResolveA
 F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Mario3.exe
 F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Mario3.pdb
+C:\Users\Stephen\Dropbox\Public\Games\Mario3\Mario3\Mario3\bin\x86\Debug\Mario3.exe
+C:\Users\Stephen\Dropbox\Public\Games\Mario3\Mario3\Mario3\bin\x86\Debug\Mario3.pdb
+C:\Users\Stephen\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Mario3.csprojResolveAssemblyReference.cache
+C:\Users\Stephen\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Stephen\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Mario3.exe
+C:\Users\Stephen\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Mario3.pdb
+C:\Users\Stephen\Dropbox\Public\Games\Mario3\Mario3\Mario3\bin\x86\Debug\Content\images\woodtile.xnb
+F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\bin\x86\Debug\Content\images\woodtile.xnb

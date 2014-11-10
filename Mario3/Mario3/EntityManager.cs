@@ -14,9 +14,14 @@ namespace Mario3
         readonly List<Keys> downKeys = new List<Keys>();
         readonly List<Keys> upKeys = new List<Keys>();
         private Viewport viewport;
-        private Texture2D spritesheet;
         private InputManager inputManager;
         private ResourceManager resourceManager;
+
+        internal ResourceManager ResourceManager
+        {
+            get { return resourceManager; }
+            set { resourceManager = value; }
+        }
 
         public EntityManager(InputManager inputManager, ResourceManager resourceManager)
         {
@@ -32,11 +37,11 @@ namespace Mario3
 
         public void AddEntity(GameObject entity)
         {
-            entity.Initialise(viewport, spritesheet);
+            entity.Initialise(viewport, this);
             entitiesToAdd.Add(entity);
         }
 
-        public void Initialise(Viewport viewport, Texture2D spritesheet)
+        public void Initialise(Viewport viewport)
         {
             
         }

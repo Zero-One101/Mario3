@@ -20,11 +20,16 @@ namespace Mario3
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        InputManager inputManager;
+        ResourceManager resourceManager;
+        EntityManager entityManager;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferWidth = 256;
+            graphics.PreferredBackBufferHeight = 240;
         }
 
         /// <summary>
@@ -36,7 +41,17 @@ namespace Mario3
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            inputManager = new InputManager();
+            resourceManager = new ResourceManager(this.Content);
+            entityManager = new EntityManager(inputManager, resourceManager);
+            Mario mario = new Mario();
+            entityManager.AddEntity(mario);
 
+            for (int i = 0; i < 16; i++)
+            {
+                Tile tile = new Tile(i * 16, 224);
+                entityManager.AddEntity(tile);
+            }
             base.Initialize();
         }
 
@@ -48,6 +63,8 @@ namespace Mario3
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch.CreateWhiteTexture();
+            Texture2D tile = Content.Load<Texture2D>(@"images\woodtile");
 
             // TODO: use this.Content to load your game content here
         }
@@ -73,7 +90,8 @@ namespace Mario3
                 this.Exit();
 
             // TODO: Add your update logic here
-
+            inputManager.Update();
+            entityManager.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -86,7 +104,9 @@ namespace Mario3
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            entityManager.Draw(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

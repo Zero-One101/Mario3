@@ -15,6 +15,11 @@ namespace Mario3
         private readonly Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>(); 
         private readonly Dictionary<string, SoundEffect> sounds = new Dictionary<string, SoundEffect>();
 
+        public ResourceManager(ContentManager content)
+        {
+            this.content = content;
+        }
+
         public Texture2D LoadTexture2D(string filepath)
         {
             if (textures.ContainsKey(filepath))
