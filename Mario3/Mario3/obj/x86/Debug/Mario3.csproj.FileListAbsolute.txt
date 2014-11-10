@@ -1,0 +1,6 @@
+F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\bin\x86\Debug\Mario3.exe
+F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\bin\x86\Debug\Mario3.pdb
+F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Mario3.csprojResolveAssemblyReference.cache
+F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Mario3.exe
+F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Mario3.pdb

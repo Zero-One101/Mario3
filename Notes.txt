@@ -1,0 +1,169 @@
+<ZeroOne>I'm also thinking that I'll probably start tweaking how Space Invaders works. I know katsu mentioned something about having each object ask for its assets and doing stuff like checking to see if it's already in cache or loaded in RAM, which sounds nice
+<ZeroOne>OR. Take a step towards my Metroid engine and implement what I just said in a simple Mario 3 engine
+<PY>yeah, anything real is going to need a resource manager
+<ZeroOne>Problem is, I have no idea how to write a resource manager. And I'm sure as fuck not gonna learn it in Uni.
+<PY>which will let you do things like cache once you've loaded once so each load on a hard drive doesn't kill the frame, and preload resources
+<PY>well
+<PY>the very simplest is like, you take the resource loading code
+<PY>and you extract it
+<PY>and you put a check to see if the file you want is in a dictionary before it
+<PY>if it is, return that
+<PY>if not, load it and shove it in the dictionary
+<PY>bam, cache layer
+<ZeroOne>A dictionary of what, <bool, asset>?
+<PY>A Dictionary<TResourceIdentifier, TResource> where TResourceIdentifier in its simplest form is a filepath, and TResource in its simplest form is file contents
+<PY>but you may want that more complex for real problems
+<ZeroOne>So I'm assuming that's about as generic as possible to allow for loading in sound, textures, meshes etc. into just a single dictionary?
+<PY>my example is, yes. The implementation does not have to be
+<ZeroOne>Though, I'm not aware if there's an asset supertype that everything else derives from
+<ZeroOne>Oh, so I could have separate dictionaries for each asset type?
+<PY>you'd have to make that
+<ZeroOne>Ah
+<PY>you could have entirely seperate resource managers
+<PY>you can do whatever you want
+<ZeroOne>Given I want to do this in XNA, I think I'd go with separate.
+<PY>the basic concept is just to keep things in memory instead of hitting the disk
+<ZeroOne>And tbh, even if there was some all-encompassing asset supertype, I'd probably still want to separate them.
+<PY>yeah, it's a decision with good arguments on both sides, there's no wrong answer there
+<PY>the hard problems come when you have a lot of resources and have to figure out which ones to drop
+<ZeroOne>Yeah, I'm interpreting it as a form of the single responsibility principle. I'd rather have specific dictionaries than a god dictionary
+<PY>This is a valid and thoughtful viewpoint, well done!
+<ZeroOne>:D!
+<ZeroOne>Now, would this manager be a static class that everything can see, or would it be instantiated at runtime and passed to the EntityManager?
+<ZeroOne>I'm inclined towards the latter
+<PY>Preferably the second
+<ZeroOne>whee
+<PY>once you have cache dropping and invalidation you could plausably want different layers of caching with different configurations, even.
+<ZeroOne>So an object would request FilePath. ResourceManager would check the dictionary for FilePath. If it exists, return the value of that key. Else, load it, store it, THEN return it
+<PY>yep
+<ZeroOne>Now, how would I go about removing the files that aren't being used? How could I check for that?
+<PY>cache invalidation is a Hard Problem to do perfectly
+<ZeroOne>dangit
+<PY>the simplest method would just be to /never/ remove things and flush between levels
+<PY>a more nuanced method could just sort by last use 
+<PY>an even better method could sort by last use and size
+<PY>but then you have to consider that small resources don't take much memory but /do/ still incur a heavy cost on a hard drive
+<PY>large resources take up a lot of memory, but can incur a lot of cost even on an SSD
+<ZeroOne>Seems to me that flushing between levels would be a more preferable option for my current abilities
+<PY>it is a good balance between simplicity and correctness, yeah
+<PY>in that it's certainly correct
+<ZeroOne>And is definitely simple
+<ZeroOne>So on new level, ResourceManager.Flush();
+<PY>hm, I don't like the name flush there
+<PY>maybe Clear
+<ZeroOne>Yeah, I was thinking that
+<ZeroOne>Flush makes me think of streams
+<PY>mmm
+<PY>which makes it a good time to bring up the old quote!
+<PY>There are only two hard problems in Computer Science: cache invalidation and naming things.
+<ZeroOne>Hahaha
+<ZeroOne>I prefer the alternate one
+<ZeroOne>There are only two hard problems in Computer Science: cache invalidation, naming things and off-by-one errors
+<PY>ha.
+<ZeroOne>So, I'm passing ResourceManager to EntityManager. Would the entities have access to ResourceManager through EntityManager, or should I pass the entities the ResourceManager too? In this case, I'm thinking the former.
+<PY>yes, everything needs access to the Entity Manager, so it can act as a gatekeeper to the rest of the world
+
+<ZeroOne>So I'm going to start working on a Mario engine
+<PY>y u
+<PY>oh
+<PY>neat
+<ZeroOne>I'm just not sure how the code should be structured with regards to a Level class
+<PY>Level probably wants to know where all the bits go!
+<ZeroOne>The Level class is really going to be in charge of setting up, updating and drawing the level objects, so tiles, enemies, pickups, etc.
+<ZeroOne>But I'm wondering how it would work in relation to the EntityManager
+<PY>I'd actually not put it in charge of update/draw
+<ZeroOne>I was probably just going to have it call EntityManager.Update/Draw()
+<ZeroOne>Unless calling EM directly would be better
+<PY>maybe just be able to ask for what objects exist in some area? That way you can have it load arbitrary levels of whatever size on the fly
+<ZeroOne>I was thinking that on the setup, the Level would just pass which objects should exist to the EM
+<PY>that's the simpler option, yeah. Just like you'd make any objects, give them to the EM and let it handle everything
+<PY>the only extra complexity would arise for very large or procedural levels
+<ZeroOne>I was wondering if EntityManager should hold a reference to the current Level, if Level should hold a reference to the EntityManager, or if I should keep the two farily separate
+<ZeroOne>fairly*
+<ZeroOne>There's also the case of a Camera class to help determine if an object is on screen or not, which I imagine the EntityManager will hold so the entities can have a look at and see if they're onscreen or not
+<PY>I'd probably want to structure it so that Level knows as little as possible, but you could have LevelManagers which are just regular game objects that make the level on initialisation and do the needful otherwise
+<ZeroOne>So the LevelManager would give EntityManager a list of things to add, and then EntityManager would handle the updating and drawing of those things
+<PY>yeah. It'd basically just be a thing that knows what the level is built from and doesn't need to do anything after it loads
+<PY>unless you want to do streaming levels
+<ZeroOne>Pretty sure I don't
+<ZeroOne>I'm not seeing this going any more complex than Mario 3
+<PY>then you can probably get away with loading everything at the start and just disabling things not in view
+<ZeroOne>That was my plan
+<PY>should work, I'd think.
+<ZeroOne>Still sounds like LevelManager would have to hold a reference to the EntityManager though
+<PY>yes
+<PY>but not because it's special
+<PY>all game objects have an EM reference
+<ZeroOne>So I take it the LevelManager and the Level classes would both derive from GameObject
+<ZeroOne>Which would mean that GameObject could not contain Update and Draw methods. Sounds like a reason to use IUpdateable and IDrawable, I thin
+<ZeroOne>think
+<PY>Eh, Level doesn't need to. You could combine the two, I'm just thinking about future expansion
+<PY>special cases are bad, anyway
+<PY>just let the LevelManager update
+<PY>it won't do anything, but who cares
+<PY>if you do care, have it kill itself after initialisation
+<ZeroOne>Ah. I was thinking Level would handle the actual parsing of the level, and LevelManager would handle passing the details to the EM
+<PY>Sure, that's a good option, go with that. In that case, Level isn't a game object, and LevelManager basically acts as a wrapper to take your level descriptor and turn it into video games
+<PY>advantage: you could replace it with a StreamingLevelManager or something later without having to touch your level descritors
+<ZeroOne>whoo
+<ZeroOne>So Level will accept a filepath to the map file. LevelManager will accept a Level. Level will load the file and parse it, LevelManager will pass the parsed date to EM to deal with. So Level doesn't contain an Update and Draw, but LevelManager, deriving from GameObject, will.
+<PY>sounds like a plan
+<ZeroOne>I just don't like the idea of LevelManager having Update and Draw methods that don't do a thing
+<PY>it won't do any harm, but if you don't even want the nops then have LM schedule its destruction at the end of initialisation
+<ZeroOne>So it'd pass the data to EM, then kill itelf
+<PY>yep
+<ZeroOne>Alright. Still don't like the idea of two useless methods, but that does sound better
+<PY>they aren't useless, they just don't do anything. Most of your objects won't need to do anything on init, for example!
+<ZeroOne>But I recall you telling me at one point that something like a GameObject class should only contain methods and fields that every subtype will definitely use.
+<PY>yes
+<ZeroOne>We were talking about my Candy game and I think you pointed out the rotation field and asked "will /everything/ rotate"
+<PY>every game object needs to be able to set itself up, do something, and draw something
+<PY>those somethings can still be nothing
+<PY>your other options are all worse here, they introduce special cases
+<ZeroOne>So GameObject needs to be as general as possible
+<ZeroOne>Having Update and Draw in everything is more general than only having Update and Draw for specific things
+<PY>there's a balance. Too much generality and you can't do anything. Too little and you can't do enough.
+<ZeroOne>I take it that's something you figure out through experience?
+<PY>pretty much, yeah. You want to be as general as you need to make a simple system without lots of corner cases, but not much more
+<ZeroOne>Right
+<PY>or you end up with an EntityManager<T, TCommandProvider, TCommandScheduler, TObjectFactory, ...>
+<ZeroOne>I'm also going to assume that my Camera class will be a GameObject (with blank Update and Draw methods).
+<ZeroOne>Or perhaps not
+<PY>your camera might actually want both, or at least update so it can move around
+<ZeroOne>Ah, yes, update
+<ZeroOne>And I know I want EntityManager to contain a reference to the Camera so tiles, enemies, whatever know if they're on screen and should be drawn
+<ZeroOne>I can't help thinking it sounds circular
+<ZeroOne>EntityManager has a reference to Camera. But Camera is a GameObject, which means it'll contain a reference to EntityManager
+<PY>that isn't necessarily a problem
+<PY>but you could generalise it, have EntityManager contain a reference to /something/ which knows how to provide information on where to render
+<PY>in this case it's a gameobject, but not necessarily
+<ZeroOne>So perhaps a Screen object, that contains the bounds of the camera relative to worldspace?
+<PY>sure, yeah
+<ZeroOne>Though if the circularity isn't a terrible thing, I'd probably stick with that
+<PY>circularity isn't necessarily bad. The EM uses the camera to provide the rendering offsets, and it also updates the camera object, but it doesn't have to know they're the same thing
+<ZeroOne>When is circularity a bad thing?
+<PY>when you have two things which can't be changed without affecting one another. In this case they're incidentally circular, and not circularly dependant at all
+<ZeroOne>But in my case, Camera can't really do anything to EM and EM just updates Camera
+<ZeroOne>Well, Camera /could/ techincally call EM's Update and Draw methods
+<PY>yeah, and even if it did, they aren't dependant on each other's implementations. You could swap either out. The important distinction there is making sure that you /can/ swap out the camera provider
+<PY>a constantly scrolling camera could be written not at all as a gameobject, for example
+<ZeroOne>Ah, so a circular dependency is bad when modifying one requires modifying the other. But in my case, they can still act independantly of each other
+<PY>yeah, exactly
+<ZeroOne>I see
+<ZeroOne>I guess the only things I need to figure out is how camera space relates to world space and gettings tiles to work
+<ZeroOne>And also how entities work with worldspace versus cameraspace
+<PY>mmm. Depends on how you're doing drawing. Can you ask everything to draw to something in-memory and cut a bit out?
+<ZeroOne>Like draw the entire level as a big PNG or something and just draw the bit I need?
+<ZeroOne>Because the way I was going to do it would be to draw only the things that the camera can see, plus 1 tile left, right and up
+<PY>not to a png, but if you can get things to draw to something which isn't the screen then everything can draw in world-space
+<PY>presumably you would only draw around the camera even so
+<ZeroOne>Like the backbuffer?
+<PY>yeah that sounds right
+<ZeroOne>I /think/ that's possible, but I prefer my method
+<PY>fair enough! In that case you could consider giving your draw methods a config object of some kind that includes stuff like the offset to convert world co-ordinates to view co-ordinates
+<PY>or if your EM has a camera reference, have a nice property for ViewX and ViewY and use those
+<ZeroOne>That's what I was thinking
+<PY>sounds like a plan, then!
+<ZeroOne>:D!
+<ZeroOne>I require hot, liquid sustenance
+<ZeroOne>brb
