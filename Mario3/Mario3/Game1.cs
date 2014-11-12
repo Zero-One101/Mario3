@@ -11,7 +11,8 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Mario3
 {
-    delegate void KeyDownHandler(object sender, KeyDownEventArgs e);
+    internal delegate void KeyDownHandler(object sender, KeyDownEventArgs e);
+    internal delegate void KeyUpHandler(object sender, KeyUpEventArgs e);
 
     /// <summary>
     /// This is the main type for your game
@@ -44,6 +45,7 @@ namespace Mario3
             inputManager = new InputManager();
             resourceManager = new ResourceManager(this.Content);
             entityManager = new EntityManager(inputManager, resourceManager);
+            entityManager.Initialise(GraphicsDevice.Viewport);
             Mario mario = new Mario();
             entityManager.AddEntity(mario);
 
@@ -52,6 +54,8 @@ namespace Mario3
                 Tile tile = new Tile(i * 16, 224);
                 entityManager.AddEntity(tile);
             }
+            Tile testTile = new Tile(128, 208);
+            entityManager.AddEntity(testTile);
             base.Initialize();
         }
 

@@ -7,6 +7,8 @@ namespace Mario3
     {
         protected Texture2D spritesheet;
         protected Vector2 position;
+        protected Vector2 nextPosition;
+        protected float maxMoveSpeed;
         protected bool isDead;
 
         public bool IsDead
@@ -20,7 +22,7 @@ namespace Mario3
         protected Point framePos;
         protected Viewport viewport;
         protected EntityManager entityManager;
-        protected float moveSpeed;
+        protected Vector2 moveSpeed;
         protected Rectangle hitRect;
 
         public Rectangle HitRect
@@ -28,7 +30,12 @@ namespace Mario3
             get { return hitRect; }
         }
 
-        public abstract void Initialise(Viewport viewport, EntityManager entityManager);
+        public virtual void Initialise(Viewport viewport, EntityManager entityManager)
+        {
+            this.viewport = viewport;
+            this.entityManager = entityManager;
+        }
+
         public abstract void Update(GameTime gameTime);
         public abstract void Draw(SpriteBatch spriteBatch);
         public abstract void Collide(GameObject gameObject);

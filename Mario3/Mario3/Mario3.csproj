@@ -79,6 +79,7 @@
     <Compile Include="IAnimated.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="KeyDownEventArgs.cs" />
+    <Compile Include="KeyUpEventArgs.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="LevelManager.cs" />
     <Compile Include="Mario.cs" />

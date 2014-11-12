@@ -12,19 +12,25 @@ namespace Mario3
     {
         private readonly List<Keys> downKeys = new List<Keys>();
         private readonly List<Keys> upKeys = new List<Keys>();
-        private readonly List<Keys> prevDownKeys = new List<Keys>();
-        private float gravity = 2.0f;
+        private const float gravity = 0.1f;
+        private const float jumpStrength = 3.0f;
         private bool isFalling = true;
 
         public override void Initialise(Viewport viewport, EntityManager entityManager)
         {
-            this.entityManager = entityManager;
+            base.Initialise(viewport, entityManager);
             entityManager.KeyDown += entityManager_KeyDown;
-            this.viewport = viewport;
+            entityManager.KeyUp += entityManager_KeyUp;
             position = new Vector2(viewport.Width / 2, viewport.Height / 2);
+            nextPosition = position;
             frameSize = new Point(16, 32);
-            moveSpeed = 2.0f;
             hitRect = new Rectangle((int)position.X, (int)position.Y, frameSize.X, frameSize.Y);
+            maxMoveSpeed = 2.0f;
+        }
+
+        void entityManager_KeyUp(object sender, KeyUpEventArgs e)
+        {
+            upKeys.Add(e.Key);
         }
 
         void entityManager_KeyDown(object sender, KeyDownEventArgs e)
@@ -36,6 +42,7 @@ namespace Mario3
         {
             CheckInput();
             ApplyGravity();
+            position = nextPosition;
             hitRect = new Rectangle((int)position.X, (int)position.Y, frameSize.X, frameSize.Y);
         }
 
@@ -43,7 +50,7 @@ namespace Mario3
         {
             if (isFalling)
             {
-                position.Y += gravity;
+                moveSpeed.Y += gravity;
             }
         }
 
@@ -51,26 +58,39 @@ namespace Mario3
         {
             if (downKeys.Contains(Keys.Right))
             {
-                position.X += moveSpeed;
+                moveSpeed.X = maxMoveSpeed;
             }
             if (downKeys.Contains(Keys.Left))
             {
-                position.X -= moveSpeed;
+                moveSpeed.X = -maxMoveSpeed;
             }
-            if (downKeys.Contains(Keys.Up))
+            if (downKeys.Contains(Keys.X))
             {
                 if (!isFalling)
                 {
-                    position.Y -= (moveSpeed * 30);
+                    moveSpeed.Y -= jumpStrength;
                     isFalling = true;
                 }
             }
             if (downKeys.Contains(Keys.Down))
             {
-                //position.Y += moveSpeed;
+                
             }
 
             downKeys.Clear();
+
+            if (upKeys.Contains(Keys.Right))
+            {
+                moveSpeed.X -= maxMoveSpeed;
+            }
+            if (upKeys.Contains(Keys.Left))
+            {
+                moveSpeed.X += maxMoveSpeed;
+            }
+
+            upKeys.Clear();
+
+            nextPosition = position + moveSpeed;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

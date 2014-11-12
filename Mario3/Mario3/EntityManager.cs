@@ -9,25 +9,27 @@ namespace Mario3
     class EntityManager
     {
         public event KeyDownHandler KeyDown;
+        public event KeyUpHandler KeyUp;
         readonly List<GameObject> entities = new List<GameObject>();
         readonly List<GameObject> entitiesToAdd = new List<GameObject>();
         readonly List<Keys> downKeys = new List<Keys>();
         readonly List<Keys> upKeys = new List<Keys>();
         private Viewport viewport;
         private InputManager inputManager;
-        private ResourceManager resourceManager;
 
-        internal ResourceManager ResourceManager
-        {
-            get { return resourceManager; }
-            set { resourceManager = value; }
-        }
+        internal ResourceManager ResourceManager { get; private set; }
 
         public EntityManager(InputManager inputManager, ResourceManager resourceManager)
         {
-            this.resourceManager = resourceManager;
+            ResourceManager = resourceManager;
             this.inputManager = inputManager;
             this.inputManager.KeyDown += inputManager_KeyDown;
+            this.inputManager.KeyUp += inputManager_KeyUp;
+        }
+
+        void inputManager_KeyUp(object sender, KeyUpEventArgs e)
+        {
+            upKeys.Add(e.Key);
         }
 
         void inputManager_KeyDown(object sender, KeyDownEventArgs e)
@@ -43,7 +45,7 @@ namespace Mario3
 
         public void Initialise(Viewport viewport)
         {
-            
+            this.viewport = viewport;
         }
 
         public void Update(GameTime gameTime)
@@ -54,6 +56,11 @@ namespace Mario3
             foreach (Keys key in downKeys)
             {
                 FireKeyDown(key);
+            }
+
+            foreach (Keys key in upKeys)
+            {
+                FireKeyUp(key);
             }
 
             foreach (GameObject entity in entities.Where(entity => !entity.IsDead))
@@ -73,20 +80,28 @@ namespace Mario3
         {
             foreach (GameObject firstEntity in entities)
             {
-                foreach (GameObject secondEntity in entities)
+                foreach (GameObject secondEntity in entities.Where(secondEntity => firstEntity.HitRect.Intersects(secondEntity.HitRect)))
                 {
-                    if (firstEntity.HitRect.Intersects(secondEntity.HitRect))
-                    {
-                        firstEntity.Collide(secondEntity);
-                        secondEntity.Collide(firstEntity);
-                    }
+                    firstEntity.Collide(secondEntity);
+                    secondEntity.Collide(firstEntity);
                 }
             }
         }
 
         private void FireKeyDown(Keys key)
         {
-            KeyDown(this, new KeyDownEventArgs(key));
+            if (KeyDown != null)
+            {
+                KeyDown(this, new KeyDownEventArgs(key));
+            }
+        }
+
+        private void FireKeyUp(Keys key)
+        {
+            if (KeyUp != null)
+            {
+                KeyUp(this, new KeyUpEventArgs(key));
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

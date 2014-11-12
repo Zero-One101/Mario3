@@ -7,6 +7,7 @@ namespace Mario3
     class InputManager
     {
         public event KeyDownHandler KeyDown;
+        public event KeyUpHandler KeyUp;
         KeyboardState keyboardState;
         readonly List<Keys> downKeys = new List<Keys>();
         readonly List<Keys> upKeys = new List<Keys>();
@@ -32,6 +33,11 @@ namespace Mario3
             {
                 upKeys.Add(key);
             }
+
+            foreach (Keys key in upKeys)
+            {
+                FireKeyUp(key);
+            }
         }
 
         private void FireKeyDown(Keys key)
@@ -42,5 +48,12 @@ namespace Mario3
             }
         }
 
+        private void FireKeyUp(Keys key)
+        {
+            if (KeyUp != null)
+            {
+                KeyUp(this, new KeyUpEventArgs(key));
+            }
+        }
     }
 }
