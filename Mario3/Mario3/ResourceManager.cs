@@ -14,6 +14,7 @@ namespace Mario3
         private ContentManager content;
         private readonly Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>(); 
         private readonly Dictionary<string, SoundEffect> sounds = new Dictionary<string, SoundEffect>();
+        private readonly Dictionary<string, SpriteFont> fonts = new Dictionary<string, SpriteFont>(); 
 
         public ResourceManager(ContentManager content)
         {
@@ -40,12 +41,22 @@ namespace Mario3
             {
                 return sounds[filepath];
             }
-            else
+           
+            SoundEffect sound = content.Load<SoundEffect>(filepath);
+            sounds.Add(filepath, sound);
+            return sound;
+        }
+
+        public SpriteFont LoadSpriteFont(string filepath)
+        {
+            if (fonts.ContainsKey(filepath))
             {
-                SoundEffect sound = content.Load<SoundEffect>(filepath);
-                sounds.Add(filepath, sound);
-                return sound;
+                return fonts[filepath];
             }
+
+            SpriteFont font = content.Load<SpriteFont>(filepath);
+            fonts.Add(filepath, font);
+            return font;
         }
 
         public void Clear()

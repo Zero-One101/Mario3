@@ -15,6 +15,7 @@ namespace Mario3
         private const float gravity = 0.1f;
         private const float jumpStrength = 3.0f;
         private bool isFalling = true;
+        private SpriteFont font;
 
         public override void Initialise(Viewport viewport, EntityManager entityManager)
         {
@@ -26,6 +27,7 @@ namespace Mario3
             frameSize = new Point(16, 32);
             hitRect = new Rectangle((int)position.X, (int)position.Y, frameSize.X, frameSize.Y);
             maxMoveSpeed = 2.0f;
+            font = this.entityManager.ResourceManager.LoadSpriteFont(@"SpriteFonts\SpriteFont1");
         }
 
         void entityManager_KeyUp(object sender, KeyUpEventArgs e)
@@ -41,9 +43,8 @@ namespace Mario3
         public override void Update(GameTime gameTime)
         {
             CheckInput();
-            ApplyGravity();
-            position = nextPosition;
             hitRect = new Rectangle((int)position.X, (int)position.Y, frameSize.X, frameSize.Y);
+            ApplyGravity();
         }
 
         private void ApplyGravity()
@@ -90,12 +91,14 @@ namespace Mario3
 
             upKeys.Clear();
 
-            nextPosition = position + moveSpeed;
+            position += moveSpeed;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.FillRectangle(new Rectangle((int)position.X, (int)position.Y, frameSize.X, frameSize.Y), Color.Red);
+            spriteBatch.DrawRectangle(hitRect, Color.Green);
+            spriteBatch.DrawString(font, moveSpeed.Y.ToString(), new Vector2(50, 50), Color.Red);
         }
 
         public override void Collide(GameObject gameObject)
@@ -105,7 +108,34 @@ namespace Mario3
                 Tile tile = (Tile)gameObject;
                 if (tile.ColType == Tile.CollisionType.SOLID)
                 {
-                    isFalling = false;
+                    Rectangle objectCol = tile.HitRect;
+
+                    // X-axis collision
+                    if (hitRect.Right > objectCol.Left && hitRect.Right < objectCol.Right)
+                    {
+                        if (moveSpeed.X > 0)
+                        {
+                            position.X = objectCol.X - objectCol.Width;
+                        }
+                    }
+                    else if (hitRect.Left < objectCol.Right && hitRect.Left > objectCol.Left)
+                    {
+                        if (moveSpeed.X < 0)
+                        {
+                            position.X = objectCol.X + hitRect.Width;
+                        }
+                    }
+
+                    // Y-axis collision
+                    if (hitRect.Bottom > objectCol.Top && hitRect.Bottom < objectCol.Bottom)
+                    {
+                        if (moveSpeed.Y > 0)
+                        {
+                            position.Y = objectCol.Y - hitRect.Height - 0.1f;
+                        }
+                        moveSpeed.Y = 0;
+                        //isFalling = false;
+                    }
                 }
             }
         }

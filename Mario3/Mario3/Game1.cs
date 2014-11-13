@@ -24,6 +24,7 @@ namespace Mario3
         InputManager inputManager;
         ResourceManager resourceManager;
         EntityManager entityManager;
+        private SpriteFont font;
 
         public Game1()
         {
@@ -44,6 +45,7 @@ namespace Mario3
             // TODO: Add your initialization logic here
             inputManager = new InputManager();
             resourceManager = new ResourceManager(this.Content);
+            font = resourceManager.LoadSpriteFont(@"SpriteFonts\SpriteFont1");
             entityManager = new EntityManager(inputManager, resourceManager);
             entityManager.Initialise(GraphicsDevice.Viewport);
             Mario mario = new Mario();
@@ -107,9 +109,12 @@ namespace Mario3
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            float frameRate = 1/(float) gameTime.ElapsedGameTime.TotalSeconds;
+
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             entityManager.Draw(spriteBatch);
+            spriteBatch.DrawString(font, "FPS: " + frameRate, new Vector2(25, 25), Color.Red);
             spriteBatch.End();
             base.Draw(gameTime);
         }

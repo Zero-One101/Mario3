@@ -12,3 +12,5 @@ C:\Users\Stephen\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Mario3.
 C:\Users\Stephen\Dropbox\Public\Games\Mario3\Mario3\Mario3\obj\x86\Debug\Mario3.pdb
 C:\Users\Stephen\Dropbox\Public\Games\Mario3\Mario3\Mario3\bin\x86\Debug\Content\images\woodtile.xnb
 F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\bin\x86\Debug\Content\images\woodtile.xnb
+C:\Users\Stephen\Dropbox\Public\Games\Mario3\Mario3\Mario3\bin\x86\Debug\Content\SpriteFonts\SpriteFont1.xnb
+F:\Dropbox\Public\Games\Mario3\Mario3\Mario3\bin\x86\Debug\Content\SpriteFonts\SpriteFont1.xnb

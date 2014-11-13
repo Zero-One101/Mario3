@@ -9,13 +9,14 @@ namespace Mario3
 {
     class Tile : GameObject
     {
+        public int TileId { get; private set; }
         public enum CollisionType
         {
             NONE = 0,
             SOLID,
         };
 
-        private CollisionType colType;
+        private readonly CollisionType colType;
 
         internal CollisionType ColType
         {
@@ -46,7 +47,7 @@ namespace Mario3
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(spritesheet, position, Color.White);
-            //spriteBatch.DrawRectangle(hitRect, Color.Green);
+            spriteBatch.DrawRectangle(hitRect, Color.Green);
         }
 
         public override void Collide(GameObject gameObject)

@@ -53,6 +53,23 @@ namespace Mario3
             entities.AddRange(entitiesToAdd);
             entitiesToAdd.Clear();
 
+            UpdateKeys();
+
+            foreach (GameObject entity in entities.Where(entity => !entity.IsDead))
+            {
+                entity.Update(gameTime);
+            }
+
+            entities.RemoveAll(x => x.IsDead);
+
+            CheckCollision();
+
+            downKeys.Clear();
+            upKeys.Clear();
+        }
+
+        private void UpdateKeys()
+        {
             foreach (Keys key in downKeys)
             {
                 FireKeyDown(key);
@@ -62,18 +79,6 @@ namespace Mario3
             {
                 FireKeyUp(key);
             }
-
-            foreach (GameObject entity in entities.Where(entity => !entity.IsDead))
-            {
-                entity.Update(gameTime);
-            }
-
-            CheckCollision();
-
-            entities.RemoveAll(x => x.IsDead);
-
-            downKeys.Clear();
-            upKeys.Clear();
         }
 
         private void CheckCollision()
