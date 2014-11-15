@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,10 +11,10 @@ namespace Mario3
     {
         public event KeyDownHandler KeyDown;
         public event KeyUpHandler KeyUp;
-        readonly List<GameObject> entities = new List<GameObject>();
-        readonly List<GameObject> entitiesToAdd = new List<GameObject>();
-        readonly List<Keys> downKeys = new List<Keys>();
-        readonly List<Keys> upKeys = new List<Keys>();
+        private readonly List<GameObject> entities = new List<GameObject>();
+        private readonly List<GameObject> entitiesToAdd = new List<GameObject>();
+        private readonly List<Keys> downKeys = new List<Keys>();
+        private readonly List<Keys> upKeys = new List<Keys>();
         private Viewport viewport;
         private InputManager inputManager;
 
@@ -83,9 +84,12 @@ namespace Mario3
 
         private void CheckCollision()
         {
+            Debug.Print("Checking Collision");
+            // TODO: Find a method that isn't O(n^2)
             foreach (GameObject firstEntity in entities)
             {
-                foreach (GameObject secondEntity in entities.Where(secondEntity => firstEntity.HitRect.Intersects(secondEntity.HitRect)))
+                GameObject entity = firstEntity;
+                foreach (GameObject secondEntity in entities.Where(secondEntity => entity.HitRect.Intersects(secondEntity.HitRect)))
                 {
                     firstEntity.Collide(secondEntity);
                     secondEntity.Collide(firstEntity);

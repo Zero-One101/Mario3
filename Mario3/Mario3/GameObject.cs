@@ -23,9 +23,9 @@ namespace Mario3
         protected Viewport viewport;
         protected EntityManager entityManager;
         protected Vector2 moveSpeed;
-        protected Rectangle hitRect;
+        protected RectangleF hitRect;
 
-        public Rectangle HitRect
+        public RectangleF HitRect
         {
             get { return hitRect; }
         }

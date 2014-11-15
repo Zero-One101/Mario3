@@ -12,6 +12,10 @@ namespace Mario3
             set;
         }
 
+        /// <summary>
+        /// Creates a 1px white texture. This method must be called prior to using any ExtendedSpriteBatch function
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public static void CreateWhiteTexture(this SpriteBatch spriteBatch)
         {
             WhiteTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
@@ -33,10 +37,10 @@ namespace Mario3
         }
 
         /// <summary>
-        /// Draw a rectangle
+        /// Draw the outline of a rectangle to the screen
         /// </summary>
         /// <param name="spriteBatch"></param>
-        /// <param name="rectangle">The rectangle to draw.</param>
+        /// <param name="rectangle">The rectangle to be drawn</param>
         /// <param name="colour">The draw color</param>
         public static void DrawRectangle(this SpriteBatch spriteBatch, Rectangle rectangle, Color colour)
         {
@@ -46,6 +50,12 @@ namespace Mario3
             spriteBatch.Draw(WhiteTexture, new Rectangle(rectangle.Right, rectangle.Top, 1, rectangle.Height + 1), colour);
         }
 
+        /// <summary>
+        /// Draws a rectangle to the screen and fills it with the specified colour
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /// <param name="rectangle">The rectangle to be drawn</param>
+        /// <param name="colour">The fill colour</param>
         public static void FillRectangle(this SpriteBatch spriteBatch, Rectangle rectangle, Color colour)
         {
             spriteBatch.Draw(WhiteTexture, rectangle, colour);
