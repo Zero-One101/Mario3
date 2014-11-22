@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-
 namespace Mario3
 {
     class EntityManager
@@ -17,7 +16,6 @@ namespace Mario3
         private readonly List<Keys> upKeys = new List<Keys>();
         private Viewport viewport;
         private InputManager inputManager;
-
         internal ResourceManager ResourceManager { get; private set; }
 
         public EntityManager(InputManager inputManager, ResourceManager resourceManager)
@@ -60,7 +58,6 @@ namespace Mario3
             {
                 entity.Update(gameTime);
             }
-
             entities.RemoveAll(x => x.IsDead);
 
             CheckCollision();
@@ -75,7 +72,6 @@ namespace Mario3
             {
                 FireKeyDown(key);
             }
-
             foreach (Keys key in upKeys)
             {
                 FireKeyUp(key);

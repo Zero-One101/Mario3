@@ -23,13 +23,18 @@ namespace Mario3
         protected Viewport viewport;
         protected EntityManager entityManager;
         protected Vector2 moveSpeed;
+        protected float terminalVelocity = 5.0f;
         protected RectangleF hitRect;
 
         public RectangleF HitRect
         {
             get { return hitRect; }
         }
-
+        /// <summary>
+        /// Initialises variables in a game object
+        /// </summary>
+        /// <param name="viewport">The viewport of the screen</param>
+        /// <param name="entityManager">An instance of the EntityManager</param>
         public virtual void Initialise(Viewport viewport, EntityManager entityManager)
         {
             this.viewport = viewport;
@@ -38,6 +43,10 @@ namespace Mario3
 
         public abstract void Update(GameTime gameTime);
         public abstract void Draw(SpriteBatch spriteBatch);
+        /// <summary>
+        /// To be called when a collision between game objects has occured
+        /// </summary>
+        /// <param name="gameObject">The game object being collided with</param>
         public abstract void Collide(GameObject gameObject);
     }
 }

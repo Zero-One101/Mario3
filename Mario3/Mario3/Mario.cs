@@ -53,6 +53,7 @@ namespace Mario3
         private void ApplyGravity()
         {
             moveSpeed.Y += gravity;
+            moveSpeed.Y = moveSpeed.Y > terminalVelocity ? terminalVelocity : moveSpeed.Y;
             Debug.Print("Applied gravity: " + moveSpeed.Y);
         }
 
@@ -74,24 +75,19 @@ namespace Mario3
                     hasJumped = true;
                 }
             }
-            if (downKeys.Contains(Keys.Down))
-            {
-                
-            }
-
             downKeys.Clear();
 
             if (upKeys.Contains(Keys.Right))
             {
-                moveSpeed.X -= maxMoveSpeed;
+                //moveSpeed.X -= maxMoveSpeed;
+                moveSpeed.X = 0;
             }
             if (upKeys.Contains(Keys.Left))
             {
-                moveSpeed.X += maxMoveSpeed;
+                //moveSpeed.X += maxMoveSpeed;
+                moveSpeed.X = 0;
             }
-
             upKeys.Clear();
-
             position += moveSpeed;
         }
 
@@ -122,26 +118,24 @@ namespace Mario3
         /// <param name="otherCol">The hitbox of the other object</param>
         private void ResolveCollision(RectangleF otherCol)
         {
-            float left = otherCol.Left - hitRect.Right;
-            float right = otherCol.Right - hitRect.Left;
-            float minXPush = Math.Abs(left) < Math.Abs(right) ? left : right;
+            Vector2 oldPos = position - moveSpeed;
+            RectangleF oldYHitRect = new RectangleF(oldPos.X, position.Y, frameSize.X, frameSize.Y);
 
-            float top = otherCol.Top - hitRect.Bottom;
-            float bottom = otherCol.Bottom - hitRect.Top;
-            float minYPush = Math.Abs(top) < Math.Abs(bottom) ? top : bottom;
-
-            if (Math.Abs(minXPush) < Math.Abs(minYPush))
+            if (oldYHitRect.Intersects(otherCol))
             {
-                position.X += minXPush;
-            }
-            else
-            {
-                position.Y += minYPush;
+                position.Y -= moveSpeed.Y;
                 moveSpeed.Y = 0;
                 hasJumped = false;
+                hitRect = new RectangleF(position.X, position.Y, frameSize.X, frameSize.Y);
             }
 
-            hitRect = new RectangleF(position.X, position.Y, frameSize.X, frameSize.Y);
+            RectangleF oldXHitRect = new RectangleF(position.X, oldPos.Y, frameSize.X, frameSize.Y);
+            if (oldXHitRect.Intersects(otherCol))
+            {
+                position.X -= moveSpeed.X;
+                moveSpeed.X = 0;
+                hitRect = new RectangleF(position.X, position.Y, frameSize.X, frameSize.Y);
+            }
         }
     }
 }

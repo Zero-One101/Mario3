@@ -56,8 +56,14 @@ namespace Mario3
                 Tile tile = new Tile(i * 16, 224);
                 entityManager.AddEntity(tile);
             }
-            Tile testTile = new Tile(128, 208);
-            entityManager.AddEntity(testTile);
+
+            for (int i = 1; i < 16; i++)
+            {
+                Tile tile = new Tile(144, i*16);
+                entityManager.AddEntity(tile);
+            }
+            //Tile testTile = new Tile(128, 208);
+            //entityManager.AddEntity(testTile);
             base.Initialize();
         }
 
@@ -70,7 +76,6 @@ namespace Mario3
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteBatch.CreateWhiteTexture();
-            Texture2D tile = Content.Load<Texture2D>(@"images\woodtile");
 
             // TODO: use this.Content to load your game content here
         }
